@@ -57,6 +57,8 @@
       animation: pop 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55);
       position: relative;
       max-width: 90vw;
+      max-height: 90vh;
+      overflow-y: auto;
       border: 2px solid rgba(255, 255, 255, 0.3);
     }
 
@@ -95,6 +97,24 @@
       margin-bottom: 30px;
       font-size: clamp(1em, 3vw, 1.2em);
       font-weight: 500;
+    }
+
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      max-width: 300px;
+      padding: 15px 20px;
+      font-size: 1.1em;
+      border: 2px solid #667eea;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      font-family: inherit;
+      transition: all 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #764ba2;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
     }
 
     .buttons {
@@ -163,6 +183,12 @@
     #no.fleeing {
       position: fixed !important;
       transition: all 0.15s ease-out !important;
+    }
+
+    .start-btn {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      box-shadow: 0 12px 25px rgba(102, 126, 234, 0.4);
     }
 
     .heart {
@@ -263,6 +289,56 @@
       }
     }
 
+    .stats-container {
+      text-align: left;
+      max-width: 600px;
+      width: 100%;
+    }
+
+    .stat-item {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px 20px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .stat-item h3 {
+      color: white;
+      margin-bottom: 8px;
+      font-size: 1.3em;
+    }
+
+    .stat-item p {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1em;
+      margin: 5px 0;
+    }
+
+    .stat-yes {
+      border-left: 4px solid #4ade80;
+    }
+
+    .stat-no {
+      border-left: 4px solid #f87171;
+    }
+
+    .admin-link {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      width: 30px;
+      height: 30px;
+      opacity: 0.1;
+      cursor: pointer;
+      z-index: 9999;
+    }
+
+    .admin-link:hover {
+      opacity: 0.3;
+    }
+
     @media (max-width: 600px) {
       .card {
         padding: 35px 30px;
@@ -280,13 +356,15 @@
 </head>
 <body>
 
-  <div class="card">
-    <h1>Magst du mich? 😊</h1>
-    <div class="subtitle">Sei ehrlich... 👀</div>
+  <!-- Geheimer Admin-Link (unsichtbar für normale Nutzer) -->
+  <div class="admin-link" onclick="showAdminLogin()"></div>
 
+  <div class="card" id="nameScreen">
+    <h1>Heyy! 😊</h1>
+    <div class="subtitle">Wie heißt du?</div>
+    <input type="text" id="nameInput" class="name-input" placeholder="Dein Name..." maxlength="30">
     <div class="buttons">
-      <button id="yes">JA 😄</button>
-      <button id="no">Nein</button>
+      <button class="start-btn" onclick="startGame()">Los geht's! ✨</button>
     </div>
   </div>
 
@@ -299,12 +377,15 @@
   </audio>
 
   <script>
-    const noBtn = document.getElementById("no");
-    const yesBtn = document.getElementById("yes");
     const errorSound = document.getElementById("errorSound");
     const uwuSound = document.getElementById("uwuSound");
+    let userName = "";
     let yesScale = 1;
     let noAttempts = 0;
+    let noBtn, yesBtn;
+
+    // ADMIN PASSWORT - ÄNDERE DAS!
+    const ADMIN_PASSWORD = "geheim123";
 
     // Hintergrund-Sterne erstellen
     function createSparkles() {
@@ -322,10 +403,75 @@
 
     createSparkles();
 
-    function chaosUwU() {
+    async function startGame() {
+      const input = document.getElementById("nameInput");
+      userName = input.value.trim();
+      
+      if (!userName) {
+        input.style.borderColor = "#f87171";
+        input.placeholder = "Bitte gib deinen Namen ein! 😊";
+        return;
+      }
+
+      // Speichere Session-Start
+      try {
+        await window.storage.set(`session:${Date.now()}:${userName}`, JSON.stringify({
+          name: userName,
+          started: new Date().toISOString(),
+          noAttempts: 0,
+          saidYes: false
+        }), true);
+      } catch (e) {
+        console.log("Storage nicht verfügbar");
+      }
+
+      // Zeige Frage-Screen
+      document.getElementById("nameScreen").innerHTML = `
+        <h1>Magst du mich? 😊</h1>
+        <div class="subtitle">Sei ehrlich, ${userName}... 👀</div>
+        <div class="buttons">
+          <button id="yes">JA 😄</button>
+          <button id="no">Nein</button>
+        </div>
+      `;
+
+      noBtn = document.getElementById("no");
+      yesBtn = document.getElementById("yes");
+
+      setupButtons();
+    }
+
+    function setupButtons() {
+      noBtn.addEventListener("mouseenter", chaosUwU);
+      noBtn.addEventListener("click", chaosUwU);
+      noBtn.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        chaosUwU();
+      });
+
+      yesBtn.addEventListener("click", sayYes);
+    }
+
+    async function chaosUwU() {
       noAttempts++;
       
-      // Nein-Button wird zu fixed position und flieht
+      // Update Stats
+      try {
+        const sessions = await getAllSessions();
+        const userSession = sessions.find(s => s.name === userName && !s.saidYes);
+        if (userSession) {
+          userSession.noAttempts = noAttempts;
+          await window.storage.set(userSession.key, JSON.stringify({
+            name: userName,
+            started: userSession.started,
+            noAttempts: noAttempts,
+            saidYes: false
+          }), true);
+        }
+      } catch (e) {
+        console.log("Stats update failed");
+      }
+      
       if (!noBtn.classList.contains('fleeing')) {
         noBtn.classList.add('fleeing');
       }
@@ -339,17 +485,14 @@
       noBtn.style.top = y + "px";
       noBtn.style.transform = `rotate(${Math.random() * 360}deg)`;
 
-      // Ja-Button wird exponentiell größer
       yesScale += 0.15 + (noAttempts * 0.05);
       yesBtn.style.transform = `scale(${yesScale})`;
 
-      // Mehr Herzen bei mehreren Versuchen
       const heartCount = Math.min(noAttempts, 5);
       for (let i = 0; i < heartCount; i++) {
         setTimeout(() => spawnHeart(), i * 100);
       }
 
-      // Vibration oder Sound
       if (navigator.vibrate) {
         navigator.vibrate([80, 40, 80, 40, 120]);
       } else {
@@ -357,52 +500,52 @@
         errorSound.play().catch(() => {});
       }
 
-      // Nach 10 Versuchen wird "nein" kleiner
       if (noAttempts >= 10) {
         noBtn.style.fontSize = "0.8em";
         noBtn.textContent = "Nein? 😅";
       }
     }
 
-    noBtn.addEventListener("mouseenter", chaosUwU);
-    noBtn.addEventListener("click", chaosUwU);
-    
-    noBtn.addEventListener("touchstart", (e) => {
-      e.preventDefault();
-      chaosUwU();
-    });
-
-    yesBtn.addEventListener("click", () => {
+    async function sayYes() {
       uwuSound.currentTime = 0;
       uwuSound.play().catch(() => {});
 
-      // Konfetti-Explosion
+      // Speichere JA-Antwort
+      try {
+        const sessions = await getAllSessions();
+        const userSession = sessions.find(s => s.name === userName && !s.saidYes);
+        if (userSession) {
+          await window.storage.set(userSession.key, JSON.stringify({
+            name: userName,
+            started: userSession.started,
+            noAttempts: noAttempts,
+            saidYes: true,
+            yesTime: new Date().toISOString()
+          }), true);
+        }
+      } catch (e) {
+        console.log("Stats save failed");
+      }
+
       createConfetti();
 
-      // Vibration für Erfolg
       if (navigator.vibrate) {
         navigator.vibrate([200, 100, 200, 100, 300]);
       }
 
-      // Erfolgs-Screen
       setTimeout(() => {
         document.body.innerHTML = `
           <div class="success-screen">
             <h1>Nice! 😎✨</h1>
-            <p>
-              Wusste ich doch!
-            </p>
-            <p>
-              <b>Ich mag dich auch! 😊</b>
-            </p>
+            <p>Wusste ich doch!</p>
+            <p><b>Ich mag dich auch! 😊</b></p>
             <div class="emojis">🔥💯✨</div>
           </div>
         `;
         
-        // Weiter Symbole fallen lassen
         setInterval(spawnHeart, 300);
       }, 300);
-    });
+    }
 
     function spawnHeart() {
       const symbols = ["⭐", "✨", "💫", "🌟", "⚡", "🔥"];
@@ -438,6 +581,95 @@
           setTimeout(() => confetti.remove(), 5000);
         }, i * 20);
       }
+    }
+
+    // ADMIN FUNKTIONEN
+    function showAdminLogin() {
+      const password = prompt("🔐 Admin-Passwort:");
+      if (password === ADMIN_PASSWORD) {
+        showStats();
+      } else if (password) {
+        alert("❌ Falsches Passwort!");
+      }
+    }
+
+    async function getAllSessions() {
+      try {
+        const result = await window.storage.list("session:", true);
+        if (!result || !result.keys) return [];
+        
+        const sessions = [];
+        for (const key of result.keys) {
+          try {
+            const data = await window.storage.get(key, true);
+            if (data && data.value) {
+              const session = JSON.parse(data.value);
+              sessions.push({ ...session, key });
+            }
+          } catch (e) {
+            console.log("Error loading session:", e);
+          }
+        }
+        return sessions;
+      } catch (e) {
+        console.log("Error listing sessions:", e);
+        return [];
+      }
+    }
+
+    async function showStats() {
+      const sessions = await getAllSessions();
+      
+      if (sessions.length === 0) {
+        alert("📊 Noch keine Daten vorhanden!");
+        return;
+      }
+
+      const yesSessions = sessions.filter(s => s.saidYes);
+      const noOnlySessions = sessions.filter(s => !s.saidYes);
+
+      let statsHTML = `
+        <div class="success-screen">
+          <h1>📊 Admin Stats</h1>
+          <div class="stats-container">
+            <h2 style="color: white; margin: 20px 0;">✅ Hat JA gesagt (${yesSessions.length})</h2>
+      `;
+
+      yesSessions.forEach(s => {
+        const date = new Date(s.yesTime || s.started).toLocaleString('de-DE');
+        statsHTML += `
+          <div class="stat-item stat-yes">
+            <h3>${s.name}</h3>
+            <p>❌ Nein-Versuche: ${s.noAttempts}</p>
+            <p>⏰ ${date}</p>
+          </div>
+        `;
+      });
+
+      if (noOnlySessions.length > 0) {
+        statsHTML += `<h2 style="color: white; margin: 20px 0;">🤔 Nur versucht (${noOnlySessions.length})</h2>`;
+        
+        noOnlySessions.forEach(s => {
+          const date = new Date(s.started).toLocaleString('de-DE');
+          statsHTML += `
+            <div class="stat-item stat-no">
+              <h3>${s.name}</h3>
+              <p>❌ Nein-Versuche: ${s.noAttempts}</p>
+              <p>⏰ ${date}</p>
+            </div>
+          `;
+        });
+      }
+
+      statsHTML += `
+            <button style="margin-top: 30px; background: white; color: #667eea;" onclick="location.reload()">
+              🔄 Zurück
+            </button>
+          </div>
+        </div>
+      `;
+
+      document.body.innerHTML = statsHTML;
     }
   </script>
 
