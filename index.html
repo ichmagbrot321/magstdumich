@@ -326,17 +326,18 @@
 
     .admin-link {
       position: fixed;
-      bottom: 10px;
-      right: 10px;
-      width: 30px;
-      height: 30px;
-      opacity: 0.1;
+      bottom: 20px;
+      right: 20px;
+      font-size: 12px;
       cursor: pointer;
       z-index: 9999;
+      animation: subtleBlink 3s ease-in-out infinite;
+      user-select: none;
     }
 
-    .admin-link:hover {
-      opacity: 0.3;
+    @keyframes subtleBlink {
+      0%, 90%, 100% { opacity: 0.3; }
+      95% { opacity: 0.8; }
     }
 
     @media (max-width: 600px) {
@@ -356,13 +357,13 @@
 </head>
 <body>
 
-  <!-- Geheimer Admin-Link (unsichtbar für normale Nutzer) -->
-  <div class="admin-link" onclick="showAdminLogin()"></div>
+  <!-- Geheimer Admin-Link -->
+  <div class="admin-link" onclick="showAdminLogin()">⭐</div>
 
-  <div class="card" id="nameScreen">
+  <div class="card" id="mainCard">
     <h1>Heyy! 😊</h1>
     <div class="subtitle">Wie heißt du?</div>
-    <input type="text" id="nameInput" class="name-input" placeholder="Dein Name..." maxlength="30">
+    <input type="text" id="nameInput" placeholder="Dein Name..." maxlength="30">
     <div class="buttons">
       <button class="start-btn" onclick="startGame()">Los geht's! ✨</button>
     </div>
@@ -426,15 +427,17 @@
       }
 
       // Zeige Frage-Screen
-      document.getElementById("nameScreen").innerHTML = `
+      const card = document.getElementById("mainCard");
+      card.innerHTML = `
         <h1>Magst du mich? 😊</h1>
         <div class="subtitle">Sei ehrlich, ${userName}... 👀</div>
-        <div class="buttons">
+        <div class="buttons" id="buttonContainer">
           <button id="yes">JA 😄</button>
           <button id="no">Nein</button>
         </div>
       `;
 
+      // Wichtig: Buttons neu definieren!
       noBtn = document.getElementById("no");
       yesBtn = document.getElementById("yes");
 
@@ -476,10 +479,15 @@
         noBtn.classList.add('fleeing');
       }
       
-      const maxX = window.innerWidth - 140;
-      const maxY = window.innerHeight - 70;
-      const x = Math.random() * maxX;
-      const y = Math.random() * maxY;
+      // Button-Größe berücksichtigen (ca. 140px breit, 70px hoch)
+      const btnWidth = 140;
+      const btnHeight = 70;
+      const maxX = window.innerWidth - btnWidth - 20; // 20px Abstand vom Rand
+      const maxY = window.innerHeight - btnHeight - 20;
+      
+      // Sicherstellen, dass x und y positiv sind
+      const x = Math.max(20, Math.random() * maxX);
+      const y = Math.max(20, Math.random() * maxY);
       
       noBtn.style.left = x + "px";
       noBtn.style.top = y + "px";
