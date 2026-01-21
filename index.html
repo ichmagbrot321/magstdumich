@@ -328,16 +328,18 @@
       position: fixed;
       bottom: 20px;
       right: 20px;
-      font-size: 12px;
+      font-size: 18px;
       cursor: pointer;
-      z-index: 9999;
+      z-index: 99999;
       animation: subtleBlink 3s ease-in-out infinite;
       user-select: none;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+      pointer-events: all;
     }
 
     @keyframes subtleBlink {
-      0%, 90%, 100% { opacity: 0.3; }
-      95% { opacity: 0.8; }
+      0%, 85%, 100% { opacity: 0.5; }
+      90% { opacity: 1; }
     }
 
     @media (max-width: 600px) {
