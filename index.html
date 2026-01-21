@@ -383,12 +383,16 @@
     const errorSound = document.getElementById("errorSound");
     const uwuSound = document.getElementById("uwuSound");
     let userName = "";
+    let sessionId = "";
     let yesScale = 1;
     let noAttempts = 0;
     let noBtn, yesBtn;
 
     // ADMIN PASSWORT - ÄNDERE DAS!
     const ADMIN_PASSWORD = "geheim123";
+
+    // API Endpoint - ÄNDERE DAS zu deiner Vercel URL oder lass es bei "/api/stats" für lokale API
+    const API_URL = "/api/stats";
 
     // Hintergrund-Sterne erstellen
     function createSparkles() {
@@ -406,6 +410,11 @@
 
     createSparkles();
 
+    // Session ID generieren
+    function generateSessionId() {
+      return Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+    }
+
     async function startGame() {
       const input = document.getElementById("nameInput");
       userName = input.value.trim();
@@ -416,16 +425,22 @@
         return;
       }
 
-      // Speichere Session-Start
+      sessionId = generateSessionId();
+
+      // Speichere Session-Start in der Datenbank
       try {
-        await window.storage.set(`session:${Date.now()}:${userName}`, JSON.stringify({
-          name: userName,
-          started: new Date().toISOString(),
-          noAttempts: 0,
-          saidYes: false
-        }), true);
+        await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'start',
+            sessionId: sessionId,
+            name: userName,
+            timestamp: new Date().toISOString()
+          })
+        });
       } catch (e) {
-        console.log("Storage nicht verfügbar");
+        console.log("API nicht erreichbar:", e);
       }
 
       // Zeige Frage-Screen
@@ -439,7 +454,6 @@
         </div>
       `;
 
-      // Wichtig: Buttons neu definieren!
       noBtn = document.getElementById("no");
       yesBtn = document.getElementById("yes");
 
@@ -460,36 +474,35 @@
     async function chaosUwU() {
       noAttempts++;
       
-      // Update Stats
+      // Speichere Nein-Versuch
       try {
-        const sessions = await getAllSessions();
-        const userSession = sessions.find(s => s.name === userName && !s.saidYes);
-        if (userSession) {
-          userSession.noAttempts = noAttempts;
-          await window.storage.set(userSession.key, JSON.stringify({
+        await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'no-attempt',
+            sessionId: sessionId,
             name: userName,
-            started: userSession.started,
-            noAttempts: noAttempts,
-            saidYes: false
-          }), true);
-        }
+            attemptNumber: noAttempts,
+            timestamp: new Date().toISOString()
+          })
+        });
       } catch (e) {
-        console.log("Stats update failed");
+        console.log("API nicht erreichbar:", e);
       }
       
       if (!noBtn.classList.contains('fleeing')) {
         noBtn.classList.add('fleeing');
       }
       
-      // Button-Größe berücksichtigen (ca. 140px breit, 70px hoch)
-      const btnWidth = 140;
-      const btnHeight = 70;
-      const maxX = window.innerWidth - btnWidth - 20; // 20px Abstand vom Rand
-      const maxY = window.innerHeight - btnHeight - 20;
-      
-      // Sicherstellen, dass x und y positiv sind
-      const x = Math.max(20, Math.random() * maxX);
-      const y = Math.max(20, Math.random() * maxY);
+      const btnWidth = 160;
+      const btnHeight = 80;
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const maxX = viewportWidth - btnWidth - 30;
+      const maxY = viewportHeight - btnHeight - 30;
+      const x = Math.max(30, Math.min(maxX, Math.random() * maxX));
+      const y = Math.max(30, Math.min(maxY, Math.random() * maxY));
       
       noBtn.style.left = x + "px";
       noBtn.style.top = y + "px";
@@ -522,19 +535,19 @@
 
       // Speichere JA-Antwort
       try {
-        const sessions = await getAllSessions();
-        const userSession = sessions.find(s => s.name === userName && !s.saidYes);
-        if (userSession) {
-          await window.storage.set(userSession.key, JSON.stringify({
+        await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'yes',
+            sessionId: sessionId,
             name: userName,
-            started: userSession.started,
             noAttempts: noAttempts,
-            saidYes: true,
-            yesTime: new Date().toISOString()
-          }), true);
-        }
+            timestamp: new Date().toISOString()
+          })
+        });
       } catch (e) {
-        console.log("Stats save failed");
+        console.log("API nicht erreichbar:", e);
       }
 
       createConfetti();
@@ -603,83 +616,66 @@
       }
     }
 
-    async function getAllSessions() {
-      try {
-        const result = await window.storage.list("session:", true);
-        if (!result || !result.keys) return [];
-        
-        const sessions = [];
-        for (const key of result.keys) {
-          try {
-            const data = await window.storage.get(key, true);
-            if (data && data.value) {
-              const session = JSON.parse(data.value);
-              sessions.push({ ...session, key });
-            }
-          } catch (e) {
-            console.log("Error loading session:", e);
-          }
-        }
-        return sessions;
-      } catch (e) {
-        console.log("Error listing sessions:", e);
-        return [];
-      }
-    }
-
     async function showStats() {
-      const sessions = await getAllSessions();
-      
-      if (sessions.length === 0) {
-        alert("📊 Noch keine Daten vorhanden!");
-        return;
-      }
-
-      const yesSessions = sessions.filter(s => s.saidYes);
-      const noOnlySessions = sessions.filter(s => !s.saidYes);
-
-      let statsHTML = `
-        <div class="success-screen">
-          <h1>📊 Admin Stats</h1>
-          <div class="stats-container">
-            <h2 style="color: white; margin: 20px 0;">✅ Hat JA gesagt (${yesSessions.length})</h2>
-      `;
-
-      yesSessions.forEach(s => {
-        const date = new Date(s.yesTime || s.started).toLocaleString('de-DE');
-        statsHTML += `
-          <div class="stat-item stat-yes">
-            <h3>${s.name}</h3>
-            <p>❌ Nein-Versuche: ${s.noAttempts}</p>
-            <p>⏰ ${date}</p>
-          </div>
-        `;
-      });
-
-      if (noOnlySessions.length > 0) {
-        statsHTML += `<h2 style="color: white; margin: 20px 0;">🤔 Nur versucht (${noOnlySessions.length})</h2>`;
+      try {
+        const response = await fetch(API_URL + '?action=get');
+        const data = await response.json();
         
-        noOnlySessions.forEach(s => {
-          const date = new Date(s.started).toLocaleString('de-DE');
+        if (!data.sessions || data.sessions.length === 0) {
+          alert("📊 Noch keine Daten vorhanden!");
+          return;
+        }
+
+        const sessions = data.sessions;
+        const yesSessions = sessions.filter(s => s.saidYes);
+        const noOnlySessions = sessions.filter(s => !s.saidYes);
+
+        let statsHTML = `
+          <div class="success-screen">
+            <h1>📊 Admin Stats</h1>
+            <div class="stats-container">
+              <h2 style="color: white; margin: 20px 0;">✅ Hat JA gesagt (${yesSessions.length})</h2>
+        `;
+
+        yesSessions.forEach(s => {
+          const date = new Date(s.timestamp).toLocaleString('de-DE');
           statsHTML += `
-            <div class="stat-item stat-no">
+            <div class="stat-item stat-yes">
               <h3>${s.name}</h3>
               <p>❌ Nein-Versuche: ${s.noAttempts}</p>
               <p>⏰ ${date}</p>
             </div>
           `;
         });
-      }
 
-      statsHTML += `
-            <button style="margin-top: 30px; background: white; color: #667eea;" onclick="location.reload()">
-              🔄 Zurück
-            </button>
+        if (noOnlySessions.length > 0) {
+          statsHTML += `<h2 style="color: white; margin: 20px 0;">🤔 Nur versucht (${noOnlySessions.length})</h2>`;
+          
+          noOnlySessions.forEach(s => {
+            const date = new Date(s.timestamp).toLocaleString('de-DE');
+            const attempts = s.noAttempts || 0;
+            statsHTML += `
+              <div class="stat-item stat-no">
+                <h3>${s.name}</h3>
+                <p>❌ Nein-Versuche: ${attempts}</p>
+                <p>⏰ ${date}</p>
+              </div>
+            `;
+          });
+        }
+
+        statsHTML += `
+              <button style="margin-top: 30px; background: white; color: #667eea; padding: 15px 30px; border: none; border-radius: 12px; cursor: pointer; font-size: 1.1em; font-weight: 600;" onclick="location.reload()">
+                🔄 Zurück
+              </button>
+            </div>
           </div>
-        </div>
-      `;
+        `;
 
-      document.body.innerHTML = statsHTML;
+        document.body.innerHTML = statsHTML;
+      } catch (e) {
+        alert("❌ Fehler beim Laden der Stats: " + e.message);
+      }
     }
   </script>
 
