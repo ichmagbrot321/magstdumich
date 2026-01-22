@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magst du mich? 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-yes {
+            background: #4caf50;
+            color: white;
+            font-size: 18px;
+        }
+
+        .btn-yes:hover {
+            background: #45a049;
+            transform: scale(1.05);
+        }
+
+        .btn-no {
+            background: #f44336;
+            color: white;
+            font-size: 14px;
+            position: absolute;
+        }
+
+        .btn-no:hover {
+            background: #da190b;
+        }
+
+        .question-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .question-container h2 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 1.8em;
+        }
+
+        .buttons-wrapper {
+            position: relative;
+            height: 200px;
+            margin-top: 30px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error {
+            color: #f44336;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .success {
+            color: #4caf50;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .stats-container {
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .stat-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-item {
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            border-left: 4px solid #4caf50;
+        }
+
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .link-share {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .link-share input {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        /* Mobile Optimierung */
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .question-container h2 {
+                font-size: 1.4em;
+            }
+
+            .btn {
+                padding: 12px;
+                font-size: 14px;
+            }
+        }
+
+        /* Tablet Optimierung */
+        @media (min-width: 601px) and (max-width: 1024px) {
+            .container {
+                max-width: 600px;
+                padding: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login/Register Screen -->
+        <div id="authScreen">
+            <h1>💕 Magst du mich?</h1>
+            <div class="input-group">
+                <label for="username">Benutzername</label>
+                <input type="text" id="username" placeholder="Dein Username">
+            </div>
+            <div class="input-group">
+                <label for="password">Passwort</label>
+                <input type="password" id="password" placeholder="Dein Passwort">
+            </div>
+            <button class="btn btn-primary" onclick="login()">Einloggen</button>
+            <button class="btn btn-secondary" onclick="register()">Registrieren</button>
+            <div id="authError" class="error hidden"></div>
+            <div id="authSuccess" class="success hidden"></div>
+        </div>
+
+        <!-- Visitor Screen -->
+        <div id="visitorScreen" class="hidden">
+            <h1>💕 Magst du <span id="targetUsername"></span>?</h1>
+            <div class="input-group">
+                <label for="visitorName">Wie heißt du?</label>
+                <input type="text" id="visitorName" placeholder="Dein Name">
+            </div>
+            <button class="btn btn-primary" onclick="startQuestion()">Weiter</button>
+            <div id="visitorError" class="error hidden"></div>
+        </div>
+
+        <!-- Question Screen -->
+        <div id="questionScreen" class="hidden">
+            <div class="question-container">
+                <h2>Magst du mich? 💕</h2>
+                <div class="buttons-wrapper">
+                    <button class="btn btn-yes" onclick="sayYes()" style="position: relative; width: 100%;">
+                        ❤️ JA
+                    </button>
+                    <button class="btn btn-no" id="noBtn" onclick="tryNo()">
+                        💔 Nein
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thank You Screen -->
+        <div id="thankYouScreen" class="hidden">
+            <h1>❤️ Vielen Dank!</h1>
+            <p style="text-align: center; margin-top: 20px; font-size: 1.2em; color: #667eea;">
+                Deine Antwort wurde gespeichert!
+            </p>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="adminScreen" class="hidden">
+            <h1>📊 Dein Dashboard</h1>
+            
+            <div class="link-share">
+                <strong>Dein persönlicher Link:</strong>
+                <input type="text" id="personalLink" readonly onclick="this.select()">
+                <p style="font-size: 12px; color: #666; margin-top: 5px;">
+                    Teile diesen Link mit anderen!
+                </p>
+            </div>
+
+            <div id="statsContent">
+                <div class="loader"></div>
+            </div>
+
+            <button class="btn btn-secondary" onclick="logout()" style="margin-top: 20px;">
+                Ausloggen
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = '/api/stats';
+        let currentUser = null;
+        let currentSession = null;
+        let noAttempts = 0;
+
+        // Check URL parameter
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetUser = urlParams.get('u');
+            
+            if (targetUser) {
+                showVisitorScreen(targetUser);
+            } else {
+                showAuthScreen();
+            }
+        };
+
+        function showAuthScreen() {
+            hideAllScreens();
+            document.getElementById('authScreen').classList.remove('hidden');
+        }
+
+        function showVisitorScreen(username) {
+            hideAllScreens();
+            document.getElementById('visitorScreen').classList.remove('hidden');
+            document.getElementById('targetUsername').textContent = username;
+        }
+
+        function showQuestionScreen() {
+            hideAllScreens();
+            document.getElementById('questionScreen').classList.remove('hidden');
+            resetNoButton();
+        }
+
+        function showThankYouScreen() {
+            hideAllScreens();
+            document.getElementById('thankYouScreen').classList.remove('hidden');
+        }
+
+        function showAdminScreen() {
+            hideAllScreens();
+            document.getElementById('adminScreen').classList.remove('hidden');
+            const link = window.location.origin + '/?u=' + currentUser;
+            document.getElementById('personalLink').value = link;
+            loadStats();
+        }
+
+        function hideAllScreens() {
+            document.getElementById('authScreen').classList.add('hidden');
+            document.getElementById('visitorScreen').classList.add('hidden');
+            document.getElementById('questionScreen').classList.add('hidden');
+            document.getElementById('thankYouScreen').classList.add('hidden');
+            document.getElementById('adminScreen').classList.add('hidden');
+        }
+
+        async function register() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorEl = document.getElementById('authError');
+            const successEl = document.getElementById('authSuccess');
+
+            errorEl.classList.add('hidden');
+            successEl.classList.add('hidden');
+
+            if (!username || !password) {
+                errorEl.textContent = 'Bitte alle Felder ausfüllen!';
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'register',
+                        username: username,
+                        password: hashPassword(password)
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    successEl.textContent = 'Registrierung erfolgreich! Bitte einloggen.';
+                    successEl.classList.remove('hidden');
+                    document.getElementById('password').value = '';
+                } else {
+                    errorEl.textContent = data.error || 'Registrierung fehlgeschlagen';
+                    errorEl.classList.remove('hidden');
+                }
+            } catch (error) {
+                errorEl.textContent = 'Serverfehler: ' + error.message;
+                errorEl.classList.remove('hidden');
+            }
+        }
+
+        async function login() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorEl = document.getElementById('authError');
+
+            errorEl.classList.add('hidden');
+
+            if (!username || !password) {
+                errorEl.textContent = 'Bitte alle Felder ausfüllen!';
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'login',
+                        username: username,
+                        password: hashPassword(password)
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    currentUser = username;
+                    sessionStorage.setItem('loggedInUser', username);
+                    sessionStorage.setItem('userPassword', hashPassword(password));
+                    showAdminScreen();
+                } else {
+                    errorEl.textContent = data.error || 'Login fehlgeschlagen';
+                    errorEl.classList.remove('hidden');
+                }
+            } catch (error) {
+                errorEl.textContent = 'Serverfehler: ' + error.message;
+                errorEl.classList.remove('hidden');
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            sessionStorage.clear();
+            showAuthScreen();
+        }
+
+        async function startQuestion() {
+            const name = document.getElementById('visitorName').value.trim();
+            const errorEl = document.getElementById('visitorError');
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetUser = urlParams.get('u');
+
+            errorEl.classList.add('hidden');
+
+            if (!name) {
+                errorEl.textContent = 'Bitte gib deinen Namen ein!';
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            // Check if already voted
+            const voteKey = 'voted_' + targetUser;
+            if (localStorage.getItem(voteKey)) {
+                errorEl.textContent = 'Du hast bereits abgestimmt!';
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            currentSession = {
+                id: generateSessionId(),
+                name: name,
+                targetUser: targetUser
+            };
+
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'start',
+                        username: targetUser,
+                        sessionId: currentSession.id,
+                        name: name,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+
+                showQuestionScreen();
+            } catch (error) {
+                errorEl.textContent = 'Fehler beim Starten';
+                errorEl.classList.remove('hidden');
+            }
+        }
+
+        function tryNo() {
+            noAttempts++;
+            const btn = document.getElementById('noBtn');
+            const container = btn.parentElement;
+            
+            const maxX = container.offsetWidth - btn.offsetWidth;
+            const maxY = container.offsetHeight - btn.offsetHeight;
+            
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+            
+            btn.style.left = randomX + 'px';
+            btn.style.top = randomY + 'px';
+
+            // Speichere jeden Nein-Versuch
+            if (currentSession) {
+                fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'no-attempt',
+                        username: currentSession.targetUser,
+                        sessionId: currentSession.id,
+                        attemptNumber: noAttempts,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+            }
+        }
+
+        async function sayYes() {
+            if (!currentSession) return;
+
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'yes',
+                        username: currentSession.targetUser,
+                        sessionId: currentSession.id,
+                        noAttempts: noAttempts,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+
+                // Mark as voted
+                const voteKey = 'voted_' + currentSession.targetUser;
+                localStorage.setItem(voteKey, 'true');
+
+                showThankYouScreen();
+            } catch (error) {
+                alert('Fehler beim Speichern');
+            }
+        }
+
+        async function loadStats() {
+            const statsContent = document.getElementById('statsContent');
+            statsContent.innerHTML = '<div class="loader"></div>';
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'get-stats',
+                        username: currentUser,
+                        password: sessionStorage.getItem('userPassword')
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    displayStats(data.sessions);
+                } else {
+                    statsContent.innerHTML = '<p class="error">' + data.error + '</p>';
+                }
+            } catch (error) {
+                statsContent.innerHTML = '<p class="error">Fehler beim Laden der Stats</p>';
+            }
+        }
+
+        function displayStats(sessions) {
+            const statsContent = document.getElementById('statsContent');
+            
+            const yesSessions = sessions.filter(s => s.saidYes);
+            const noSessions = sessions.filter(s => !s.saidYes);
+
+            let html = `
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <h3>❤️ Ja-Sager (${yesSessions.length})</h3>
+                        ${yesSessions.map(s => `
+                            <div class="stat-item">
+                                <strong>${s.name}</strong><br>
+                                <small>Nein-Versuche: ${s.noAttempts}</small><br>
+                                <small>${new Date(s.timestamp).toLocaleString('de-DE')}</small>
+                            </div>
+                        `).join('') || '<p>Noch keine Ja-Sager</p>'}
+                    </div>
+
+                    <div class="stat-card">
+                        <h3>💔 Noch unentschlossen (${noSessions.length})</h3>
+                        ${noSessions.map(s => `
+                            <div class="stat-item">
+                                <strong>${s.name}</strong><br>
+                                <small>Nein-Versuche: ${s.noAttempts}</small><br>
+                                <small>${new Date(s.timestamp).toLocaleString('de-DE')}</small>
+                            </div>
+                        `).join('') || '<p>Keine Besucher</p>'}
+                    </div>
+                </div>
+            `;
+
+            statsContent.innerHTML = html;
+        }
+
+        function resetNoButton() {
+            const btn = document.getElementById('noBtn');
+            btn.style.left = '';
+            btn.style.top = '';
+            btn.style.position = 'absolute';
+            btn.style.bottom = '20px';
+            btn.style.left = '50%';
+            btn.style.transform = 'translateX(-50%)';
+            noAttempts = 0;
+        }
+
+        function generateSessionId() {
+            return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        function hashPassword(password) {
+            // Simple hash für Demo - in Produktion bcrypt verwenden!
+            let hash = 0;
+            for (let i = 0; i < password.length; i++) {
+                const char = password.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return 'hash_' + Math.abs(hash).toString(36);
+        }
+    </script>
+</body>
+</html>
