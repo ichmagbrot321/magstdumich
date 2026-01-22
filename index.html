@@ -12,7 +12,7 @@
     }
 
     body {
-      height: 100vh;
+      min-height: 100vh;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
       background-size: 400% 400%;
       animation: gradientShift 15s ease infinite;
@@ -20,8 +20,9 @@
       justify-content: center;
       align-items: center;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      overflow: hidden;
+      overflow-x: hidden;
       position: relative;
+      padding: 20px;
     }
 
     @keyframes gradientShift {
@@ -56,9 +57,8 @@
         0 10px 25px rgba(0, 0, 0, 0.2);
       animation: pop 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55);
       position: relative;
-      max-width: 90vw;
-      max-height: 90vh;
-      overflow-y: auto;
+      max-width: 500px;
+      width: 100%;
       border: 2px solid rgba(255, 255, 255, 0.3);
     }
 
@@ -106,7 +106,7 @@
       font-size: 1.1em;
       border: 2px solid #667eea;
       border-radius: 12px;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       font-family: inherit;
       transition: all 0.3s;
     }
@@ -117,51 +117,76 @@
       box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
     }
 
+    .link-box {
+      background: rgba(102, 126, 234, 0.1);
+      border: 2px dashed #667eea;
+      border-radius: 12px;
+      padding: 15px;
+      margin: 20px 0;
+      word-break: break-all;
+    }
+
+    .link-box input {
+      background: white;
+      border: 1px solid #667eea;
+      margin: 0;
+    }
+
     .buttons {
       position: relative;
-      height: 90px;
       margin-top: 20px;
       display: flex;
-      gap: 25px;
+      gap: 15px;
       justify-content: center;
       align-items: center;
       flex-wrap: wrap;
     }
 
     button {
-      padding: 18px 45px;
-      font-size: clamp(1em, 3vw, 1.3em);
+      padding: 15px 35px;
+      font-size: clamp(1em, 3vw, 1.2em);
       border-radius: 15px;
       border: none;
       cursor: pointer;
       transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
       font-family: inherit;
       font-weight: 600;
-      position: static;
-      flex-shrink: 0;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      box-shadow: 0 12px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+      color: #666;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    button:active {
+      transform: scale(0.95);
     }
 
     #yes {
       background: linear-gradient(135deg, #667eea, #764ba2);
       color: white;
-      box-shadow: 
-        0 12px 25px rgba(102, 126, 234, 0.4),
-        0 6px 12px rgba(118, 75, 162, 0.3);
+      box-shadow: 0 12px 25px rgba(102, 126, 234, 0.4);
       z-index: 2;
       animation: yesPulse 1.5s ease-in-out infinite;
-      transform-origin: center;
     }
 
     @keyframes yesPulse {
       0%, 100% { 
-        box-shadow: 
-          0 12px 25px rgba(102, 126, 234, 0.4),
-          0 6px 12px rgba(118, 75, 162, 0.3);
+        box-shadow: 0 12px 25px rgba(102, 126, 234, 0.4);
       }
       50% { 
-        box-shadow: 
-          0 15px 35px rgba(102, 126, 234, 0.6),
-          0 8px 16px rgba(118, 75, 162, 0.5);
+        box-shadow: 0 15px 35px rgba(102, 126, 234, 0.6);
       }
     }
 
@@ -170,25 +195,24 @@
       color: #666;
       box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
       z-index: 1;
-    }
-
-    button:hover {
-      transform: scale(1.1);
-    }
-
-    button:active {
-      transform: scale(0.95);
+      position: static;
     }
 
     #no.fleeing {
-      position: fixed !important;
-      transition: all 0.15s ease-out !important;
+      position: absolute !important;
+      transition: all 0.2s ease-out !important;
     }
 
-    .start-btn {
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: white;
-      box-shadow: 0 12px 25px rgba(102, 126, 234, 0.4);
+    .error {
+      color: #f87171;
+      font-size: 0.9em;
+      margin-top: 10px;
+    }
+
+    .success {
+      color: #4ade80;
+      font-size: 0.9em;
+      margin-top: 10px;
     }
 
     .heart {
@@ -231,7 +255,7 @@
     }
 
     .success-screen {
-      height: 100vh;
+      min-height: 100vh;
       width: 100vw;
       display: flex;
       flex-direction: column;
@@ -240,7 +264,6 @@
       background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
       background-size: 400% 400%;
       animation: gradientShift 10s ease infinite;
-      font-family: inherit;
       color: white;
       text-align: center;
       padding: 20px;
@@ -266,12 +289,6 @@
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
     }
 
-    .success-screen .emojis {
-      font-size: clamp(1.5em, 5vw, 2em);
-      margin-top: 20px;
-      animation: fadeInUp 1s ease 0.6s both;
-    }
-
     @keyframes bounceIn {
       0% { transform: scale(0); opacity: 0; }
       50% { transform: scale(1.1); }
@@ -279,20 +296,15 @@
     }
 
     @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .stats-container {
       text-align: left;
       max-width: 600px;
       width: 100%;
+      margin-top: 20px;
     }
 
     .stat-item {
@@ -334,7 +346,6 @@
       animation: subtleBlink 3s ease-in-out infinite;
       user-select: none;
       text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-      pointer-events: all;
     }
 
     @keyframes subtleBlink {
@@ -344,31 +355,22 @@
 
     @media (max-width: 600px) {
       .card {
-        padding: 35px 30px;
-      }
-      
-      .buttons {
-        height: 70px;
+        padding: 35px 25px;
       }
       
       button {
-        padding: 14px 35px;
+        padding: 12px 25px;
+        font-size: 1em;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- Geheimer Admin-Link -->
-  <div class="admin-link" onclick="showAdminLogin()">⭐</div>
+  <div class="admin-link" onclick="showAdminLogin()" title="Admin Login">⭐</div>
 
   <div class="card" id="mainCard">
-    <h1>Heyy! 😊</h1>
-    <div class="subtitle">Wie heißt du?</div>
-    <input type="text" id="nameInput" placeholder="Dein Name..." maxlength="30">
-    <div class="buttons">
-      <button class="start-btn" onclick="startGame()">Los geht's! ✨</button>
-    </div>
+    <!-- Startseite wird per JavaScript geladen -->
   </div>
 
   <audio id="errorSound" preload="auto">
@@ -382,19 +384,16 @@
   <script>
     const errorSound = document.getElementById("errorSound");
     const uwuSound = document.getElementById("uwuSound");
+    const API_URL = "/api/stats";
+    
+    let currentUser = "";
     let userName = "";
     let sessionId = "";
     let yesScale = 1;
     let noAttempts = 0;
     let noBtn, yesBtn;
 
-    // ADMIN PASSWORT - ÄNDERE DAS!
-    const ADMIN_PASSWORD = "geheim123";
-
-    // API Endpoint - ÄNDERE DAS zu deiner Vercel URL oder lass es bei "/api/stats" für lokale API
-    const API_URL = "/api/stats";
-
-    // Hintergrund-Sterne erstellen
+    // Hintergrund-Sterne
     function createSparkles() {
       for (let i = 0; i < 20; i++) {
         setTimeout(() => {
@@ -415,6 +414,193 @@
       return Date.now() + '-' + Math.random().toString(36).substr(2, 9);
     }
 
+    // URL Parameter auslesen
+    function getUrlParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    // Initialisierung
+    function init() {
+      const username = getUrlParam('u');
+      
+      if (username) {
+        // Jemand besucht eine persönliche Seite
+        currentUser = username;
+        showNameInput();
+      } else {
+        // Startseite - Registrierung/Login
+        showHomepage();
+      }
+    }
+
+    // Startseite anzeigen
+    function showHomepage() {
+      document.getElementById("mainCard").innerHTML = `
+        <h1>Magst du mich? 😊</h1>
+        <div class="subtitle">Erstelle deine eigene "Magst du mich?"-Seite!</div>
+        
+        <h3 style="color: #667eea; margin: 20px 0;">Neuer Account</h3>
+        <input type="text" id="regUsername" placeholder="Dein Username..." maxlength="20">
+        <input type="password" id="regPassword" placeholder="Passwort..." maxlength="50">
+        <div id="regError" class="error"></div>
+        <div id="regSuccess" class="success"></div>
+        
+        <div class="buttons">
+          <button class="btn-primary" onclick="register()">Registrieren 🚀</button>
+        </div>
+        
+        <div style="margin: 30px 0; color: #999;">━━━━━ oder ━━━━━</div>
+        
+        <h3 style="color: #667eea; margin: 20px 0;">Account Login</h3>
+        <input type="text" id="loginUsername" placeholder="Username..." maxlength="20">
+        <input type="password" id="loginPassword" placeholder="Passwort..." maxlength="50">
+        <div id="loginError" class="error"></div>
+        
+        <div class="buttons">
+          <button class="btn-primary" onclick="login()">Einloggen 🔑</button>
+        </div>
+      `;
+    }
+
+    // Registrierung
+    async function register() {
+      const username = document.getElementById("regUsername").value.trim();
+      const password = document.getElementById("regPassword").value.trim();
+      const errorDiv = document.getElementById("regError");
+      const successDiv = document.getElementById("regSuccess");
+      
+      errorDiv.textContent = "";
+      successDiv.textContent = "";
+      
+      if (!username || !password) {
+        errorDiv.textContent = "Bitte Username und Passwort eingeben!";
+        return;
+      }
+      
+      if (username.length < 3) {
+        errorDiv.textContent = "Username muss mindestens 3 Zeichen haben!";
+        return;
+      }
+      
+      if (password.length < 4) {
+        errorDiv.textContent = "Passwort muss mindestens 4 Zeichen haben!";
+        return;
+      }
+      
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'register',
+            username: username.toLowerCase(),
+            password: password
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          successDiv.textContent = "✅ Account erstellt!";
+          setTimeout(() => showDashboard(username.toLowerCase(), password), 1000);
+        } else {
+          errorDiv.textContent = data.error || "Fehler bei Registrierung";
+        }
+      } catch (e) {
+        errorDiv.textContent = "Verbindungsfehler: " + e.message;
+      }
+    }
+
+    // Login
+    async function login() {
+      const username = document.getElementById("loginUsername").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+      const errorDiv = document.getElementById("loginError");
+      
+      errorDiv.textContent = "";
+      
+      if (!username || !password) {
+        errorDiv.textContent = "Bitte Username und Passwort eingeben!";
+        return;
+      }
+      
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'login',
+            username: username.toLowerCase(),
+            password: password
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          showDashboard(username.toLowerCase(), password);
+        } else {
+          errorDiv.textContent = "❌ " + (data.error || "Login fehlgeschlagen");
+        }
+      } catch (e) {
+        errorDiv.textContent = "Verbindungsfehler: " + e.message;
+      }
+    }
+
+    // Dashboard nach Login
+    function showDashboard(username, password) {
+      const link = window.location.origin + "/?u=" + username;
+      
+      document.getElementById("mainCard").innerHTML = `
+        <h1>Willkommen! 🎉</h1>
+        <div class="subtitle">Deine persönliche Seite ist bereit!</div>
+        
+        <div class="link-box">
+          <p style="margin-bottom: 10px; color: #667eea; font-weight: 600;">📎 Dein persönlicher Link:</p>
+          <input type="text" value="${link}" readonly onclick="this.select()">
+          <button class="btn-secondary" style="margin-top: 10px; width: 100%;" onclick="copyLink('${link}')">
+            📋 Link kopieren
+          </button>
+        </div>
+        
+        <p style="color: #666; font-size: 0.95em; margin: 20px 0;">
+          Teile diesen Link mit der Person, die du magst! 💕
+        </p>
+        
+        <div class="buttons">
+          <button class="btn-primary" onclick="showMyStats('${username}', '${password}')">
+            📊 Meine Stats ansehen
+          </button>
+          <button class="btn-secondary" onclick="location.reload()">
+            🏠 Startseite
+          </button>
+        </div>
+      `;
+    }
+
+    // Link kopieren
+    function copyLink(link) {
+      navigator.clipboard.writeText(link).then(() => {
+        alert("✅ Link kopiert!");
+      }).catch(() => {
+        alert("Link: " + link);
+      });
+    }
+
+    // Name-Eingabe für Besucher
+    function showNameInput() {
+      document.getElementById("mainCard").innerHTML = `
+        <h1>Heyy! 😊</h1>
+        <div class="subtitle">Wie heißt du?</div>
+        <input type="text" id="nameInput" placeholder="Dein Name..." maxlength="30">
+        <div class="buttons">
+          <button class="btn-primary" onclick="startGame()">Los geht's! ✨</button>
+        </div>
+      `;
+    }
+
+    // Spiel starten
     async function startGame() {
       const input = document.getElementById("nameInput");
       userName = input.value.trim();
@@ -427,28 +613,28 @@
 
       sessionId = generateSessionId();
 
-      // Speichere Session-Start in der Datenbank
+      // Session speichern
       try {
         await fetch(API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             action: 'start',
+            username: currentUser,
             sessionId: sessionId,
             name: userName,
             timestamp: new Date().toISOString()
           })
         });
       } catch (e) {
-        console.log("API nicht erreichbar:", e);
+        console.log("Speichern fehlgeschlagen:", e);
       }
 
-      // Zeige Frage-Screen
-      const card = document.getElementById("mainCard");
-      card.innerHTML = `
+      // Frage anzeigen
+      document.getElementById("mainCard").innerHTML = `
         <h1>Magst du mich? 😊</h1>
         <div class="subtitle">Sei ehrlich, ${userName}... 👀</div>
-        <div class="buttons" id="buttonContainer">
+        <div class="buttons" id="buttonContainer" style="position: relative; height: 100px;">
           <button id="yes">JA 😄</button>
           <button id="no">Nein</button>
         </div>
@@ -456,10 +642,10 @@
 
       noBtn = document.getElementById("no");
       yesBtn = document.getElementById("yes");
-
       setupButtons();
     }
 
+    // Button-Handler
     function setupButtons() {
       noBtn.addEventListener("mouseenter", chaosUwU);
       noBtn.addEventListener("click", chaosUwU);
@@ -471,16 +657,18 @@
       yesBtn.addEventListener("click", sayYes);
     }
 
+    // Nein-Button ausweichen
     async function chaosUwU() {
       noAttempts++;
       
-      // Speichere Nein-Versuch
+      // Speichern
       try {
         await fetch(API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             action: 'no-attempt',
+            username: currentUser,
             sessionId: sessionId,
             name: userName,
             attemptNumber: noAttempts,
@@ -488,58 +676,72 @@
           })
         });
       } catch (e) {
-        console.log("API nicht erreichbar:", e);
+        console.log("Fehler:", e);
       }
       
       if (!noBtn.classList.contains('fleeing')) {
         noBtn.classList.add('fleeing');
       }
       
-      const btnWidth = 160;
-      const btnHeight = 80;
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
-      const maxX = viewportWidth - btnWidth - 30;
-      const maxY = viewportHeight - btnHeight - 30;
-      const x = Math.max(30, Math.min(maxX, Math.random() * maxX));
-      const y = Math.max(30, Math.min(maxY, Math.random() * maxY));
+      const container = document.getElementById("buttonContainer");
+      const containerRect = container.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
       
-      noBtn.style.left = x + "px";
-      noBtn.style.top = y + "px";
-      noBtn.style.transform = `rotate(${Math.random() * 360}deg)`;
+      const maxMove = 120;
+      const moveX = (Math.random() - 0.5) * maxMove;
+      const moveY = (Math.random() - 0.5) * maxMove;
+      
+      const currentX = btnRect.left - containerRect.left;
+      const currentY = btnRect.top - containerRect.top;
+      
+      let newX = currentX + moveX;
+      let newY = currentY + moveY;
+      
+      const minX = 10;
+      const minY = 10;
+      const maxX = containerRect.width - btnRect.width - 10;
+      const maxY = containerRect.height - btnRect.height - 10;
+      
+      newX = Math.max(minX, Math.min(maxX, newX));
+      newY = Math.max(minY, Math.min(maxY, newY));
+      
+      noBtn.style.left = newX + "px";
+      noBtn.style.top = newY + "px";
+      noBtn.style.transform = `rotate(${(Math.random() - 0.5) * 30}deg)`;
 
-      yesScale += 0.15 + (noAttempts * 0.05);
+      yesScale += 0.12 + (noAttempts * 0.04);
       yesBtn.style.transform = `scale(${yesScale})`;
 
-      const heartCount = Math.min(noAttempts, 5);
-      for (let i = 0; i < heartCount; i++) {
+      for (let i = 0; i < Math.min(noAttempts, 3); i++) {
         setTimeout(() => spawnHeart(), i * 100);
       }
 
       if (navigator.vibrate) {
-        navigator.vibrate([80, 40, 80, 40, 120]);
+        navigator.vibrate([60, 30, 60]);
       } else {
         errorSound.currentTime = 0;
         errorSound.play().catch(() => {});
       }
 
       if (noAttempts >= 10) {
-        noBtn.style.fontSize = "0.8em";
+        noBtn.style.fontSize = "0.85em";
         noBtn.textContent = "Nein? 😅";
       }
     }
 
+    // JA geklickt
     async function sayYes() {
       uwuSound.currentTime = 0;
       uwuSound.play().catch(() => {});
 
-      // Speichere JA-Antwort
+      // Speichern
       try {
         await fetch(API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             action: 'yes',
+            username: currentUser,
             sessionId: sessionId,
             name: userName,
             noAttempts: noAttempts,
@@ -547,13 +749,13 @@
           })
         });
       } catch (e) {
-        console.log("API nicht erreichbar:", e);
+        console.log("Fehler:", e);
       }
 
       createConfetti();
 
       if (navigator.vibrate) {
-        navigator.vibrate([200, 100, 200, 100, 300]);
+        navigator.vibrate([200, 100, 200]);
       }
 
       setTimeout(() => {
@@ -562,7 +764,7 @@
             <h1>Nice! 😎✨</h1>
             <p>Wusste ich doch!</p>
             <p><b>Ich mag dich auch! 😊</b></p>
-            <div class="emojis">🔥💯✨</div>
+            <div style="font-size: 2em; margin-top: 20px;">🔥💯✨</div>
           </div>
         `;
         
@@ -570,6 +772,95 @@
       }, 300);
     }
 
+    // Admin Login (Stern)
+    function showAdminLogin() {
+      const username = prompt("👤 Dein Username:");
+      if (!username) return;
+      
+      const password = prompt("🔐 Dein Passwort:");
+      if (!password) return;
+      
+      showMyStats(username.toLowerCase(), password);
+    }
+
+    // Stats anzeigen
+    async function showMyStats(username, password) {
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'get-stats',
+            username: username,
+            password: password
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          alert("❌ " + (data.error || "Fehler beim Laden"));
+          return;
+        }
+        
+        const sessions = data.sessions || [];
+        
+        if (sessions.length === 0) {
+          alert("📊 Noch keine Antworten vorhanden!");
+          return;
+        }
+
+        const yesSessions = sessions.filter(s => s.saidYes);
+        const noOnlySessions = sessions.filter(s => !s.saidYes);
+
+        let statsHTML = `
+          <div class="success-screen">
+            <h1>📊 Deine Stats</h1>
+            <div class="stats-container">
+              <h2 style="color: white; margin: 20px 0;">✅ Hat JA gesagt (${yesSessions.length})</h2>
+        `;
+
+        yesSessions.forEach(s => {
+          const date = new Date(s.timestamp).toLocaleString('de-DE');
+          statsHTML += `
+            <div class="stat-item stat-yes">
+              <h3>${s.name}</h3>
+              <p>❌ Nein-Versuche: ${s.noAttempts}</p>
+              <p>⏰ ${date}</p>
+            </div>
+          `;
+        });
+
+        if (noOnlySessions.length > 0) {
+          statsHTML += `<h2 style="color: white; margin: 20px 0;">🤔 Nur versucht (${noOnlySessions.length})</h2>`;
+          
+          noOnlySessions.forEach(s => {
+            const date = new Date(s.timestamp || s.startTime).toLocaleString('de-DE');
+            statsHTML += `
+              <div class="stat-item stat-no">
+                <h3>${s.name}</h3>
+                <p>❌ Nein-Versuche: ${s.noAttempts || 0}</p>
+                <p>⏰ ${date}</p>
+              </div>
+            `;
+          });
+        }
+
+        statsHTML += `
+              <button class="btn-primary" style="margin-top: 30px; width: 100%;" onclick="location.reload()">
+                🔄 Zurück
+              </button>
+            </div>
+          </div>
+        `;
+
+        document.body.innerHTML = statsHTML;
+      } catch (e) {
+        alert("❌ Fehler: " + e.message);
+      }
+    }
+
+    // Herzen/Sterne
     function spawnHeart() {
       const symbols = ["⭐", "✨", "💫", "🌟", "⚡", "🔥"];
       const heart = document.createElement("div");
@@ -586,6 +877,7 @@
       setTimeout(() => heart.remove(), 4500);
     }
 
+    // Konfetti
     function createConfetti() {
       const colors = ['#667eea', '#764ba2', '#f093fb', '#5e72e4', '#825ee4'];
       
@@ -606,77 +898,8 @@
       }
     }
 
-    // ADMIN FUNKTIONEN
-    function showAdminLogin() {
-      const password = prompt("🔐 Admin-Passwort:");
-      if (password === ADMIN_PASSWORD) {
-        showStats();
-      } else if (password) {
-        alert("❌ Falsches Passwort!");
-      }
-    }
-
-    async function showStats() {
-      try {
-        const response = await fetch(API_URL + '?action=get');
-        const data = await response.json();
-        
-        if (!data.sessions || data.sessions.length === 0) {
-          alert("📊 Noch keine Daten vorhanden!");
-          return;
-        }
-
-        const sessions = data.sessions;
-        const yesSessions = sessions.filter(s => s.saidYes);
-        const noOnlySessions = sessions.filter(s => !s.saidYes);
-
-        let statsHTML = `
-          <div class="success-screen">
-            <h1>📊 Admin Stats</h1>
-            <div class="stats-container">
-              <h2 style="color: white; margin: 20px 0;">✅ Hat JA gesagt (${yesSessions.length})</h2>
-        `;
-
-        yesSessions.forEach(s => {
-          const date = new Date(s.timestamp).toLocaleString('de-DE');
-          statsHTML += `
-            <div class="stat-item stat-yes">
-              <h3>${s.name}</h3>
-              <p>❌ Nein-Versuche: ${s.noAttempts}</p>
-              <p>⏰ ${date}</p>
-            </div>
-          `;
-        });
-
-        if (noOnlySessions.length > 0) {
-          statsHTML += `<h2 style="color: white; margin: 20px 0;">🤔 Nur versucht (${noOnlySessions.length})</h2>`;
-          
-          noOnlySessions.forEach(s => {
-            const date = new Date(s.timestamp).toLocaleString('de-DE');
-            const attempts = s.noAttempts || 0;
-            statsHTML += `
-              <div class="stat-item stat-no">
-                <h3>${s.name}</h3>
-                <p>❌ Nein-Versuche: ${attempts}</p>
-                <p>⏰ ${date}</p>
-              </div>
-            `;
-          });
-        }
-
-        statsHTML += `
-              <button style="margin-top: 30px; background: white; color: #667eea; padding: 15px 30px; border: none; border-radius: 12px; cursor: pointer; font-size: 1.1em; font-weight: 600;" onclick="location.reload()">
-                🔄 Zurück
-              </button>
-            </div>
-          </div>
-        `;
-
-        document.body.innerHTML = statsHTML;
-      } catch (e) {
-        alert("❌ Fehler beim Laden der Stats: " + e.message);
-      }
-    }
+    // Start
+    init();
   </script>
 
 </body>
