@@ -42,6 +42,326 @@
             }
         }
 
+        /* HUNDE-AVATAR 3D - KOMPLETTER HUND */
+        .dog-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            perspective: 1200px;
+        }
+
+        .dog-avatar {
+            width: 160px;
+            height: 200px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        /* Hund dreht sich um - 3D Rotation */
+        .dog-avatar.password-mode {
+            transform: rotateY(180deg);
+        }
+
+        /* VORDERSEITE */
+        .dog-front {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+        }
+
+        /* Kopf */
+        .dog-head {
+            width: 90px;
+            height: 95px;
+            background: linear-gradient(135deg, #A0522D 0%, #8B4513 50%, #654321 100%);
+            border-radius: 50% 50% 45% 45%;
+            position: relative;
+            margin: 0 auto;
+            box-shadow: 
+                inset -8px -8px 15px rgba(0,0,0,0.3),
+                inset 8px 8px 15px rgba(255,255,255,0.1),
+                0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Ohren */
+        .dog-ear {
+            width: 32px;
+            height: 50px;
+            background: linear-gradient(135deg, #654321 0%, #4a2f1a 100%);
+            border-radius: 50% 50% 0 0;
+            position: absolute;
+            top: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+        }
+
+        .dog-ear.left {
+            left: -10px;
+            transform: rotate(-20deg);
+        }
+
+        .dog-ear.right {
+            right: -10px;
+            transform: rotate(20deg);
+        }
+
+        .dog-ear::before {
+            content: '';
+            width: 18px;
+            height: 28px;
+            background: #D2691E;
+            border-radius: 50%;
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Augen */
+        .dog-eyes {
+            display: flex;
+            justify-content: space-around;
+            padding: 30px 18px 0;
+            transition: all 0.3s ease;
+        }
+
+        .dog-eye {
+            width: 14px;
+            height: 14px;
+            background: radial-gradient(circle at 30% 30%, #333, #000);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        .dog-eye::after {
+            content: '';
+            width: 5px;
+            height: 5px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+        }
+
+        /* Augen schauen hoch */
+        .dog-avatar.looking-at-username .dog-eyes {
+            transform: translateY(-4px);
+        }
+
+        /* Schnauze */
+        .dog-snout {
+            width: 42px;
+            height: 32px;
+            background: linear-gradient(135deg, #D2691E 0%, #A0522D 100%);
+            border-radius: 50%;
+            position: absolute;
+            bottom: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 
+                inset -3px -3px 8px rgba(0,0,0,0.3),
+                0 3px 10px rgba(0,0,0,0.3);
+        }
+
+        .dog-nose {
+            width: 16px;
+            height: 12px;
+            background: radial-gradient(circle at 30% 30%, #333, #000);
+            border-radius: 50%;
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        .dog-nose::after {
+            content: '';
+            width: 3px;
+            height: 3px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 4px;
+        }
+
+        .dog-mouth {
+            width: 22px;
+            height: 10px;
+            border: 2px solid #000;
+            border-top: none;
+            border-radius: 0 0 50% 50%;
+            position: absolute;
+            bottom: 7px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Körper */
+        .dog-body {
+            width: 80px;
+            height: 70px;
+            background: linear-gradient(180deg, #8B4513 0%, #A0522D 100%);
+            border-radius: 40% 40% 30% 30%;
+            position: absolute;
+            top: 85px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 
+                inset -5px -5px 15px rgba(0,0,0,0.2),
+                0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Vorderpfoten */
+        .dog-leg {
+            width: 18px;
+            height: 45px;
+            background: linear-gradient(180deg, #8B4513 0%, #654321 100%);
+            border-radius: 8px 8px 40% 40%;
+            position: absolute;
+            top: 145px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+        }
+
+        .dog-leg.left {
+            left: 48px;
+        }
+
+        .dog-leg.right {
+            right: 48px;
+        }
+
+        .dog-leg::after {
+            content: '';
+            width: 20px;
+            height: 10px;
+            background: #654321;
+            border-radius: 50%;
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* RÜCKSEITE */
+        .dog-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            transform: rotateY(180deg);
+        }
+
+        /* Hinterkopf */
+        .dog-back-head {
+            width: 90px;
+            height: 95px;
+            background: linear-gradient(135deg, #654321 0%, #8B4513 50%, #A0522D 100%);
+            border-radius: 50% 50% 45% 45%;
+            position: relative;
+            margin: 0 auto;
+            box-shadow: 
+                inset 8px -8px 15px rgba(0,0,0,0.3),
+                0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Rücken-Ohren */
+        .dog-back-ear {
+            width: 32px;
+            height: 50px;
+            background: linear-gradient(135deg, #4a2f1a 0%, #654321 100%);
+            border-radius: 50% 50% 0 0;
+            position: absolute;
+            top: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+        }
+
+        .dog-back-ear.left {
+            right: -10px;
+            transform: rotate(20deg);
+        }
+
+        .dog-back-ear.right {
+            left: -10px;
+            transform: rotate(-20deg);
+        }
+
+        /* Rücken-Körper */
+        .dog-back-body {
+            width: 80px;
+            height: 70px;
+            background: linear-gradient(180deg, #654321 0%, #8B4513 100%);
+            border-radius: 40% 40% 30% 30%;
+            position: absolute;
+            top: 85px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 
+                inset 5px -5px 15px rgba(0,0,0,0.2),
+                0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Rückenstreifen */
+        .dog-back-stripe {
+            width: 25px;
+            height: 55px;
+            background: linear-gradient(to bottom, #4a2f1a, transparent);
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50%;
+            opacity: 0.5;
+        }
+
+        /* Schwanz */
+        .dog-tail {
+            width: 35px;
+            height: 50px;
+            background: linear-gradient(135deg, #8B4513, #654321);
+            border-radius: 50% 0 50% 50%;
+            position: absolute;
+            top: 105px;
+            right: -15px;
+            transform: rotate(-30deg);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+        }
+
+        /* Hinterpfoten */
+        .dog-back-leg {
+            width: 18px;
+            height: 45px;
+            background: linear-gradient(180deg, #8B4513 0%, #654321 100%);
+            border-radius: 8px 8px 40% 40%;
+            position: absolute;
+            top: 145px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+        }
+
+        .dog-back-leg.left {
+            right: 48px;
+        }
+
+        .dog-back-leg.right {
+            left: 48px;
+        }
+
+        .dog-back-leg::after {
+            content: '';
+            width: 20px;
+            height: 10px;
+            background: #654321;
+            border-radius: 50%;
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
         h1 {
             text-align: center;
             color: #667eea;
@@ -106,25 +426,47 @@
         }
 
         .btn-yes {
-            background: #4caf50;
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
             color: white;
             font-size: 18px;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
         }
 
         .btn-yes:hover {
-            background: #45a049;
+            transform: scale(1.15);
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.5);
+            font-size: 22px;
+        }
+
+        .btn-yes:active {
             transform: scale(1.05);
         }
 
         .btn-no {
-            background: #f44336;
+            background: linear-gradient(135deg, #f44336 0%, #da190b 100%);
             color: white;
             font-size: 14px;
             position: absolute;
+            transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 3px 10px rgba(244, 67, 54, 0.3);
+            cursor: pointer;
         }
 
         .btn-no:hover {
-            background: #da190b;
+            transform: scale(0.9) rotate(5deg);
+        }
+
+        .btn-no.fleeing {
+            transition: all 0.3s ease-out;
+            animation: shake 0.3s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            25% { transform: translateX(-10px) rotate(-5deg); }
+            75% { transform: translateX(10px) rotate(5deg); }
         }
 
         .question-container {
@@ -140,7 +482,7 @@
 
         .buttons-wrapper {
             position: relative;
-            height: 200px;
+            height: 250px;
             margin-top: 30px;
         }
 
@@ -215,6 +557,45 @@
             font-size: 14px;
         }
 
+        .thank-you-animation {
+            text-align: center;
+            animation: heartBeat 1s ease infinite;
+        }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+        }
+
+        .thank-you-message {
+            font-size: 1.5em;
+            color: #667eea;
+            margin-top: 20px;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #f44336;
+            position: absolute;
+            animation: confetti-fall 3s linear;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
         /* Mobile Optimierung */
         @media (max-width: 600px) {
             .container {
@@ -233,6 +614,28 @@
                 padding: 12px;
                 font-size: 14px;
             }
+
+            .btn-yes {
+                font-size: 16px;
+            }
+
+            .btn-yes:hover {
+                font-size: 20px;
+            }
+
+            .buttons-wrapper {
+                height: 200px;
+            }
+
+            .dog-avatar {
+                width: 100px;
+                height: 100px;
+            }
+
+            .dog-head {
+                width: 80px;
+                height: 80px;
+            }
         }
 
         /* Tablet Optimierung */
@@ -248,14 +651,54 @@
     <div class="container">
         <!-- Login/Register Screen -->
         <div id="authScreen">
+            <!-- HUNDE-AVATAR 3D - KOMPLETTER HUND -->
+            <div class="dog-container">
+                <div class="dog-avatar" id="dogAvatar">
+                    <!-- VORDERSEITE -->
+                    <div class="dog-front">
+                        <div class="dog-head">
+                            <div class="dog-ear left"></div>
+                            <div class="dog-ear right"></div>
+                            <div class="dog-eyes">
+                                <div class="dog-eye"></div>
+                                <div class="dog-eye"></div>
+                            </div>
+                            <div class="dog-snout">
+                                <div class="dog-nose"></div>
+                                <div class="dog-mouth"></div>
+                            </div>
+                        </div>
+                        <div class="dog-body"></div>
+                        <div class="dog-leg left"></div>
+                        <div class="dog-leg right"></div>
+                    </div>
+                    
+                    <!-- RÜCKSEITE -->
+                    <div class="dog-back">
+                        <div class="dog-back-head">
+                            <div class="dog-back-ear left"></div>
+                            <div class="dog-back-ear right"></div>
+                        </div>
+                        <div class="dog-back-body">
+                            <div class="dog-back-stripe"></div>
+                        </div>
+                        <div class="dog-tail"></div>
+                        <div class="dog-back-leg left"></div>
+                        <div class="dog-back-leg right"></div>
+                    </div>
+                </div>
+            </div>
+
             <h1>💕 Magst du mich?</h1>
             <div class="input-group">
                 <label for="username">Benutzername</label>
-                <input type="text" id="username" placeholder="Dein Username">
+                <input type="text" id="username" placeholder="Dein Username" 
+                       onfocus="dogLookAtUsername()" onblur="dogLookNormal()">
             </div>
             <div class="input-group">
                 <label for="password">Passwort</label>
-                <input type="password" id="password" placeholder="Dein Passwort">
+                <input type="password" id="password" placeholder="Dein Passwort"
+                       onfocus="dogLookAway()" onblur="dogLookNormal()">
             </div>
             <button class="btn btn-primary" onclick="login()">Einloggen</button>
             <button class="btn btn-secondary" onclick="register()">Registrieren</button>
@@ -279,10 +722,10 @@
             <div class="question-container">
                 <h2>Magst du mich? 💕</h2>
                 <div class="buttons-wrapper">
-                    <button class="btn btn-yes" onclick="sayYes()" style="position: relative; width: 100%;">
+                    <button class="btn btn-yes" onclick="sayYes()" onmouseover="growYesButton()" onmouseout="shrinkYesButton()" style="position: relative; width: 100%;">
                         ❤️ JA
                     </button>
-                    <button class="btn btn-no" id="noBtn" onclick="tryNo()">
+                    <button class="btn btn-no" id="noBtn" onmouseover="fleeFromMouse(event)" onclick="tryNo()">
                         💔 Nein
                     </button>
                 </div>
@@ -291,10 +734,13 @@
 
         <!-- Thank You Screen -->
         <div id="thankYouScreen" class="hidden">
-            <h1>❤️ Vielen Dank!</h1>
-            <p style="text-align: center; margin-top: 20px; font-size: 1.2em; color: #667eea;">
-                Deine Antwort wurde gespeichert!
-            </p>
+            <div class="thank-you-animation">
+                <h1 style="font-size: 4em;">💙</h1>
+                <div class="thank-you-message">
+                    Ich wusste es!<br>
+                    Ich mag dich auch 💙
+                </div>
+            </div>
         </div>
 
         <!-- Admin Panel -->
@@ -319,11 +765,42 @@
         </div>
     </div>
 
+    <!-- Audio Elements -->
+    <audio id="clickSound" preload="auto">
+        <source src="https://www.soundjay.com/button/sounds/button-09.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="successSound" preload="auto">
+        <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="wooshSound" preload="auto">
+        <source src="https://www.soundjay.com/misc/sounds/whoosh-13.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
         const API_URL = '/api/stats';
         let currentUser = null;
         let currentSession = null;
         let noAttempts = 0;
+        let isYesButtonGrown = false;
+
+        // ========== HUNDE-ANIMATIONEN ==========
+        function dogLookAtUsername() {
+            const dog = document.getElementById('dogAvatar');
+            dog.classList.remove('password-mode');
+            dog.classList.add('looking-at-username');
+        }
+
+        function dogLookAway() {
+            const dog = document.getElementById('dogAvatar');
+            dog.classList.remove('looking-at-username');
+            dog.classList.add('password-mode');
+        }
+
+        function dogLookNormal() {
+            const dog = document.getElementById('dogAvatar');
+            dog.classList.remove('password-mode');
+            dog.classList.remove('looking-at-username');
+        }
 
         // Check URL parameter
         window.onload = function() {
@@ -375,6 +852,50 @@
             document.getElementById('adminScreen').classList.add('hidden');
         }
 
+        // ========== YES BUTTON HOVER EFFECTS ==========
+        function growYesButton() {
+            const btn = document.querySelector('.btn-yes');
+            isYesButtonGrown = true;
+        }
+
+        function shrinkYesButton() {
+            isYesButtonGrown = false;
+        }
+
+        // ========== NO BUTTON FLEE EFFECT ==========
+        function fleeFromMouse(event) {
+            const btn = document.getElementById('noBtn');
+            const container = btn.parentElement;
+            
+            playSound('wooshSound');
+            
+            // Button wegfliegen lassen
+            btn.classList.add('fleeing');
+            
+            const containerRect = container.getBoundingClientRect();
+            const btnRect = btn.getBoundingClientRect();
+            
+            const maxX = containerRect.width - btnRect.width;
+            const maxY = containerRect.height - btnRect.height;
+            
+            // Zufällige Position weit weg von der Maus
+            let randomX, randomY;
+            do {
+                randomX = Math.random() * maxX;
+                randomY = Math.random() * maxY;
+            } while (
+                Math.abs(randomX - (event.clientX - containerRect.left)) < 100 &&
+                Math.abs(randomY - (event.clientY - containerRect.top)) < 100
+            );
+            
+            btn.style.left = randomX + 'px';
+            btn.style.top = randomY + 'px';
+            
+            setTimeout(() => {
+                btn.classList.remove('fleeing');
+            }, 300);
+        }
+
         async function register() {
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value.trim();
@@ -404,6 +925,7 @@
                 const data = await response.json();
 
                 if (response.ok) {
+                    playSound('successSound');
                     successEl.textContent = 'Registrierung erfolgreich! Bitte einloggen.';
                     successEl.classList.remove('hidden');
                     document.getElementById('password').value = '';
@@ -444,6 +966,7 @@
                 const data = await response.json();
 
                 if (response.ok) {
+                    playSound('successSound');
                     currentUser = username;
                     sessionStorage.setItem('loggedInUser', username);
                     sessionStorage.setItem('userPassword', hashPassword(password));
@@ -505,6 +1028,7 @@
                     })
                 });
 
+                playSound('clickSound');
                 showQuestionScreen();
             } catch (error) {
                 errorEl.textContent = 'Fehler beim Starten';
@@ -514,6 +1038,8 @@
 
         function tryNo() {
             noAttempts++;
+            playSound('wooshSound');
+            
             const btn = document.getElementById('noBtn');
             const container = btn.parentElement;
             
@@ -545,6 +1071,13 @@
         async function sayYes() {
             if (!currentSession) return;
 
+            // Sound & Vibration
+            playSound('successSound');
+            vibrate();
+
+            // Konfetti-Effekt
+            createConfetti();
+
             try {
                 await fetch(API_URL, {
                     method: 'POST',
@@ -562,9 +1095,47 @@
                 const voteKey = 'voted_' + currentSession.targetUser;
                 localStorage.setItem(voteKey, 'true');
 
-                showThankYouScreen();
+                setTimeout(() => {
+                    showThankYouScreen();
+                }, 500);
             } catch (error) {
                 alert('Fehler beim Speichern');
+            }
+        }
+
+        // ========== SOUND EFFECTS ==========
+        function playSound(soundId) {
+            const sound = document.getElementById(soundId);
+            if (sound) {
+                sound.currentTime = 0;
+                sound.play().catch(e => console.log('Sound play failed:', e));
+            }
+        }
+
+        // ========== VIBRATION ==========
+        function vibrate() {
+            if ('vibrate' in navigator) {
+                navigator.vibrate([200, 100, 200, 100, 200]);
+            }
+        }
+
+        // ========== KONFETTI EFFEKT ==========
+        function createConfetti() {
+            const colors = ['#f44336', '#e91e63', '#9c27b0', '#3f51b5', '#2196f3', '#4caf50', '#ffeb3b', '#ff9800'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 3000);
+                }, i * 30);
             }
         }
 
